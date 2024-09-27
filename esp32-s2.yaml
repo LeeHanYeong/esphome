@@ -1,0 +1,28 @@
+esphome:
+  name: esp32-s2
+
+esp32:
+  board: lolin_s2_mini
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  - platform: esphome
+    password: ""
+
+wifi:
+  ssid: "jhhy_2.4"
+  password: "wngmlgksdud)(@&"
+  manual_ip:
+    static_ip: 192.168.27.36
+    gateway: 192.168.27.1
+    subnet: 255.255.255.0
+
+captive_portal:

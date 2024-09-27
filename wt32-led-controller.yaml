@@ -1,0 +1,58 @@
+esphome:
+  name: wt32-led-controller
+
+esp32:
+  board: wt32-eth01
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  password: ""
+
+ethernet:
+  type: LAN8720
+  mdc_pin: GPIO23
+  mdio_pin: GPIO18
+  clk_mode: GPIO0_IN
+  phy_addr: 1
+  power_pin: GPIO16
+  manual_ip:
+    static_ip: 192.168.27.134
+    gateway: 192.168.27.1
+    subnet: 255.255.255.0
+
+text_sensor:
+  - platform: ethernet_info
+    ip_address:
+      name: ESP IP Address
+
+light:
+  - platform: cwww
+    name: "CCT Light"
+    id: wt32_cct_light
+    cold_white: cold_white_output
+    warm_white: warm_white_output
+    cold_white_color_temperature: 6500 K
+    warm_white_color_temperature: 2700 K
+    default_transition_length: 1s
+    restore_mode: RESTORE_DEFAULT_OFF
+    gamma_correct: 1.25
+
+output:
+  - platform: ledc
+    pin: GPIO12
+    id: wt32_warm_white_output
+    frequency: 4882Hz
+#    frequency: 1000Hz
+  - platform: ledc
+    pin: GPIO4
+    id: wt32_cold_white_output
+    frequency: 4882Hz
+#    frequency: 1000Hz

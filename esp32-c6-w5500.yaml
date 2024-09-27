@@ -1,0 +1,165 @@
+esphome:
+  name: esp32-c6-w5500
+
+esp32:
+  board: esp32-c6-devkitc-1 # at least until https://github.com/platformio/platform-espressif32/issues/1152 is added
+  variant: esp32c6          # ditto ↑
+  flash_size: 4MB # upload.flash_size
+  framework:
+    type: esp-idf
+    version: 5.2.2 # Need at least 5.1 for ESP32-C6
+    platform_version: 6.7.0 # Need at least 6.4 for ESP32-C6
+    # See https://github.com/esphome/issues/issues/5404
+    sdkconfig_options:
+      CONFIG_ESPTOOLPY_FLASHSIZE_4MB: y
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  - platform: esphome
+    password: ""
+
+ethernet:
+  type: W5500
+  mosi_pin: GPIO7
+  miso_pin: GPIO2
+  clk_pin: GPIO6
+  cs_pin: GPIO18
+  reset_pin: GPIO5
+  interrupt_pin: GPIO4
+  manual_ip:
+    static_ip: 192.168.27.38
+    gateway: 192.168.27.1
+    subnet: 255.255.255.0
+
+uart:
+  id: seeed_mr24hpc1_uart
+  tx_pin: GPIO10
+  rx_pin: GPIO11
+  baud_rate: 115200
+  parity: NONE
+  stop_bits: 1
+
+seeed_mr24hpc1:
+  id: my_seeed_mr24hpc1
+  uart_id: seeed_mr24hpc1_uart
+
+sensor:
+  - platform: seeed_mr24hpc1
+    custom_presence_of_detection:
+      id: "w5500_static_distance"
+      name: "Static Distance"
+    movement_signs:
+      id: "w5500_body_movement_parameter"
+      name: "Body Movement Parameter"
+    custom_motion_distance:
+      id: "w5500_motion_distance"
+      name: "Motion Distance"
+    custom_spatial_static_value:
+      id: "w5500_existence_energy"
+      name: "Existence Energy"
+    custom_spatial_motion_value:
+      id: "w5500_motion_energy"
+      name: "Motion Energy"
+    custom_motion_speed:
+      id: "w5500_motion_speed"
+      name: "Motion Speed"
+    custom_mode_num:
+      id: "w5500_custom_mode_num"
+      name: "Current Custom Mode"
+
+binary_sensor:
+  - platform: seeed_mr24hpc1
+    has_target:
+      id: "w5500_presence"
+      name: "Presence Information"
+
+switch:
+  - platform: seeed_mr24hpc1
+    underlying_open_function:
+      id: "w5500_underlying_switch"
+      name: Underlying Open Function Info Output Switch
+
+text_sensor:
+  - platform: ethernet_info
+    ip_address:
+      name: ESP IP Address
+
+  - platform: seeed_mr24hpc1
+    heart_beat:
+      id: "w5500_heart_beat"
+      name: "Heartbeat"
+    product_model:
+      id: "w5500_product_model"
+      name: "Product Model"
+    product_id:
+      id: "w5500_product_id"
+      name: "Product ID"
+    hardware_model:
+      id: "w5500_hw_model"
+      name: "Hardware Model"
+    hardware_version:
+      id: "w5500_hw_version"
+      name: "Hardware Version"
+    keep_away:
+      id: "w5500_keep_away"
+      name: "Active Reporting Of Proximity"
+    motion_status:
+      id: "w5500_motion_info"
+      name: "Motion Information"
+    custom_mode_end:
+      id: "w5500_custom_mode_status"
+      name: "Custom Mode Status"
+
+number:
+  - platform: seeed_mr24hpc1
+    sensitivity:
+      id: "w5500_sensitivity"
+      name: "Sensitivity"
+    custom_mode:
+      id: "w5500_custom_mode"
+      name: "Custom Mode"
+    existence_threshold:
+      id: "w5500_existence_threshold"
+      name: "Existence Energy Threshold"
+    motion_threshold:
+      id: "w5500_motion_threshold"
+      name: "Motion Energy Threshold"
+    motion_trigger:
+      id: "w5500_motion_trigger_time"
+      name: "Motion Trigger Time"
+    motion_to_rest:
+      id: "w5500_motion_to_rest_time"
+      name: "Motion To Rest Time"
+    custom_unman_time:
+      id: "w5500_custom_unman_time"
+      name: "Time For Entering No Person State (Underlying Open Function)"
+
+select:
+  - platform: seeed_mr24hpc1
+    scene_mode:
+      id: "w5500_scene"
+      name: "Scene"
+    unman_time:
+      id: "w5500_unman_time"
+      name: "Time For Entering No Person State (Standard Function)"
+    existence_boundary:
+      id: "w5500_existence_boundary"
+      name: "Existence Boundary"
+    motion_boundary:
+      id: "w5500_motion_boundary"
+      name: "Motion Boundary"
+
+button:
+  - platform: seeed_mr24hpc1
+    restart:
+      id: "w5500_module_restart"
+      name: "Module Restart"
+    custom_set_end:
+      id: "w5500_custom_set_end"
+      name: "End Of Custom Mode Settings"

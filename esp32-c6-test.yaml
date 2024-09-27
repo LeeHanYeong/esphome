@@ -1,0 +1,47 @@
+esphome:
+  name: esp32-c6-test
+
+esp32:
+  board: esp32-c6-devkitc-1
+  variant: esp32c6
+  flash_size: 4MB
+  framework:
+    type: esp-idf
+    version: 5.2.2
+    platform_version: 6.7.0
+    sdkconfig_options:
+      CONFIG_ESPTOOLPY_FLASHSIZE_4MB: y
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  - platform: esphome
+    password: ""
+
+wifi:
+  ssid: "jhhy_2.4"
+  password: "wngmlgksdud)(@&"
+  manual_ip:
+    static_ip: 192.168.27.205
+    gateway: 192.168.27.1
+    subnet: 255.255.255.0
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: ESP IP Address
+    ssid:
+      name: ESP Connected SSID
+    bssid:
+      name: ESP Connected BSSID
+    mac_address:
+      name: ESP Mac Wifi Address
+    scan_results:
+      name: ESP Latest Scan Results
+    dns_address:
+      name: ESP DNS Address

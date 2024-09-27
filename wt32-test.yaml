@@ -1,0 +1,31 @@
+esphome:
+  name: wt32-test
+
+esp32:
+  board: wt32-eth01
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  - platform: esphome
+    password: ""
+
+ethernet:
+  type: LAN8720
+  mdc_pin: GPIO23
+  mdio_pin: GPIO18
+  clk_mode: GPIO0_IN
+  phy_addr: 1
+  power_pin: GPIO16
+
+text_sensor:
+  - platform: ethernet_info
+    ip_address:
+      name: ESP IP Address

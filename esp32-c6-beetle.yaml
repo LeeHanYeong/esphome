@@ -1,0 +1,163 @@
+esphome:
+  name: esp32-c6-beetle
+
+esp32:
+  board: esp32-c6-devkitc-1
+  variant: esp32c6
+  flash_size: 4MB
+  framework:
+    type: esp-idf
+    version: 5.2.2
+    platform_version: 6.7.0
+    sdkconfig_options:
+      CONFIG_ESPTOOLPY_FLASHSIZE_4MB: y
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  - platform: esphome
+    password: ""
+
+ethernet:
+  type: W5500
+  mosi_pin: GPIO4
+  clk_pin: GPIO5
+  cs_pin: GPIO23
+  interrupt_pin: GPIO22
+  reset_pin: GPIO21
+  miso_pin: GPIO7
+  manual_ip:
+    static_ip: 192.168.27.30
+    gateway: 192.168.27.1
+    subnet: 255.255.255.0
+
+text_sensor:
+  - platform: ethernet_info
+    ip_address:
+      name: ESP IP Address
+  - platform: seeed_mr24hpc1
+    heart_beat:
+      id: "beetle_heart_beat"
+      name: "Heartbeat"
+    product_model:
+      id: "beetle_product_model"
+      name: "Product Model"
+    product_id:
+      id: "beetle_product_id"
+      name: "Product ID"
+    hardware_model:
+      id: "beetle_hw_model"
+      name: "Hardware Model"
+    hardware_version:
+      id: "beetle_hw_version"
+      name: "Hardware Version"
+    keep_away:
+      id: "beetle_keep_away"
+      name: "Active Reporting Of Proximity"
+    motion_status:
+      id: "beetle_motion_info"
+      name: "Motion Information"
+    custom_mode_end:
+      id: "beetle_custom_mode_status"
+      name: "Custom Mode Status"
+
+uart:
+  id: beetle_seeed_mr24hpc1_uart
+  tx_pin: GPIO20
+  rx_pin: GPIO19
+  baud_rate: 115200
+  parity: NONE
+  stop_bits: 1
+
+seeed_mr24hpc1:
+  id: beetle_mr24hpc1
+  uart_id: beetle_seeed_mr24hpc1_uart
+
+sensor:
+  - platform: seeed_mr24hpc1
+    custom_presence_of_detection:
+      id: "beetle_static_distance"
+      name: "Static Distance"
+    movement_signs:
+      id: "beetle_body_movement_parameter"
+      name: "Body Movement Parameter"
+    custom_motion_distance:
+      id: "beetle_motion_distance"
+      name: "Motion Distance"
+    custom_spatial_static_value:
+      id: "beetle_existence_energy"
+      name: "Existence Energy"
+    custom_spatial_motion_value:
+      id: "beetle_motion_energy"
+      name: "Motion Energy"
+    custom_motion_speed:
+      id: "beetle_motion_speed"
+      name: "Motion Speed"
+    custom_mode_num:
+      id: "beetle_custom_mode_num"
+      name: "Current Custom Mode"
+
+binary_sensor:
+  - platform: seeed_mr24hpc1
+    has_target:
+      id: "beetle_presence"
+      name: "Presence Information"
+
+switch:
+  - platform: seeed_mr24hpc1
+    underlying_open_function:
+      id: "beetle_underlying_switch"
+      name: Underlying Open Function Info Output Switch
+
+number:
+  - platform: seeed_mr24hpc1
+    sensitivity:
+      id: "beetle_sensitivity"
+      name: "Sensitivity"
+    custom_mode:
+      id: "beetle_custom_mode"
+      name: "Custom Mode"
+    existence_threshold:
+      id: "beetle_existence_threshold"
+      name: "Existence Energy Threshold"
+    motion_threshold:
+      id: "beetle_motion_threshold"
+      name: "Motion Energy Threshold"
+    motion_trigger:
+      id: "beetle_motion_trigger_time"
+      name: "Motion Trigger Time"
+    motion_to_rest:
+      id: "beetle_motion_to_rest_time"
+      name: "Motion To Rest Time"
+    custom_unman_time:
+      id: "beetle_custom_unman_time"
+      name: "Time For Entering No Person State (Underlying Open Function)"
+
+select:
+  - platform: seeed_mr24hpc1
+    scene_mode:
+      id: "beetle_scene"
+      name: "Scene"
+    unman_time:
+      id: "beetle_unman_time"
+      name: "Time For Entering No Person State (Standard Function)"
+    existence_boundary:
+      id: "beetle_existence_boundary"
+      name: "Existence Boundary"
+    motion_boundary:
+      id: "beetle_motion_boundary"
+      name: "Motion Boundary"
+
+button:
+  - platform: seeed_mr24hpc1
+    restart:
+      id: "beetle_module_restart"
+      name: "Module Restart"
+    custom_set_end:
+      id: "beetle_custom_set_end"
+      name: "End Of Custom Mode Settings"
